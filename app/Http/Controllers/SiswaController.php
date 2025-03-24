@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 class SiswaController extends Controller
 {
     public function index(){
-        $siswa = Auth::user()->id;
-         
-        return Inertia::render('Index');
+        $user_id = Auth::user()->id;
+         $siswas = Siswa::where('user_id', $user_id)->get();
+        return Inertia::render('Index', [
+            'siswas'=> $siswas 
+        ]);
         
     }
 
@@ -21,14 +23,18 @@ class SiswaController extends Controller
     }
 
 
-    public function store(Request $request){
+    public function store(Request $request)
+        {
         $request->validate([
             'nama' => 'required',
-            'nis' => 'required | unique',
+            'nis' => 'required | unique:siswas',
             'kelas' => 'required',
             'jurusan' => 'required',
-            'alamat' => 'required'   
+            'alamat' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
+
+        $imagePath = $request->file( 'image')->store('image_siswa', 'public');
 
         $siswa = Auth::user()->id; 
         Siswa::create([
@@ -37,10 +43,40 @@ class SiswaController extends Controller
             'nis' => $request['nis'],
             'kelas' => $request['kelas'],
             'jurusan' => $request['jurusan'],
-            "alamat" => $request['alamat']
+            'alamat' => $request['alamat'],
+            'image' => $imagePath
         ]);
             return redirect()->route('siswa.index');
         }
+
+
+        public function edit( $id){
+            $siswa = Siswa::findOrFail($id); 
+            return Inertia::render('Edit', [
+                'siswa' => $siswa
+            ]);
+        }
+        
+
+        public function update( Request $request, Siswa $siswa){
+            $request->validate([
+            'nama' => 'required',
+            'nis' => 'required | unique:siswas',
+            'kelas' => 'required',
+            'jurusan' => 'required',
+            'alamat' => 'required'
+            ]);
+
+            $siswa->update($request->all()); 
+
+            return redirect()->route('siswa.index');
+        }
+
+        public function destroy( Siswa $siswa){
+            $siswa->delete();
+            return redirect()->route('siswa.index');
+        }
+        
 } 
 
 

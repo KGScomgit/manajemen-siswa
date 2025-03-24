@@ -26,6 +26,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::resource('/siswa', SiswaController::class);
+Route::resource('/siswa', SiswaController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';

@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="container">
     <h2>Tambah Siswa</h2>
-        <form @sumbit.prevent="createData">
+        <form @submit.prevent="createData">
             <div class="mb-3">
                 <label class="form-label">Nama</label>
                 <input v-model="form.nama" type="text" class="form-control" required>
@@ -22,7 +22,12 @@
                 <label class="form-label">Alamat</label>
                 <input v-model="form.alamat" type="text" class="form-control" required>
             </div>
-            <button class="btn btn-primary">Simpan</button>
+            <div class="mb-3">
+                <label class="form-label">Gambar</label>
+                <input @change="handleFileUpload" accept="image/*" type="file" class="form-control" required>
+            </div>
+
+            <button type="sumbit" class="btn btn-primary">Simpan</button>
         </form>
     </div>
 </template>
@@ -42,6 +47,9 @@
         methods:{
             createData(){
                 this.$inertia.post('/siswa', this.form);
+            },
+            handleFileUpload(event){
+                this.$inertia.image = event.target.file[0];
             }
         }
     };
