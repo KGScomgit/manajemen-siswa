@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
+use Illuminate\Session\Store;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class SiswaController extends Controller
 {
@@ -59,15 +61,23 @@ class SiswaController extends Controller
         
 
         public function update( Request $request, Siswa $siswa){
-            $request->validate([
+           $validate = $request->validate([
             'nama' => 'required',
-            'nis' => 'required | unique:siswas',
+            'nis' => 'required|unique:siswas,nis,' . $siswa->id,
             'kelas' => 'required',
             'jurusan' => 'required',
-            'alamat' => 'required'
+            'alamat' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg|max:2048'
             ]);
 
-            $siswa->update($request->all()); 
+            if ($request->hasFile('image')) {
+                if ($siswa->image){
+                    Storage::disk('public')->delete($siswa->image);
+                }
+                $validate['image']= $request->file('image')->store('image_siswa', 'public');
+            }
+
+            $siswa->update($validate); 
 
             return redirect()->route('siswa.index');
         }

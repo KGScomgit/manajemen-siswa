@@ -10,8 +10,8 @@
                 <th>Kelas</th>
                 <th>Jurusan</th>
                 <th>Alamat</th>
-                <th>Aksi</th>
                 <th>Gambar</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -22,7 +22,7 @@
                 <td>{{ siswa.jurusan }}</td>
                 <td>{{ siswa.alamat }}</td>
                 <td> 
-                    <img :src="getImageUrl(siswa.image)" alt="siswa">
+                    <img :src="getImageUrl(siswa.image)"  width="100" alt="siswa">
                 </td>
                 <td>
                     <a :href="'/siswa/' + siswa.id + '/edit'" class="btn btn-success" >Edit</a>
@@ -46,11 +46,11 @@
                     preserveScroll: true,
                     onSuccess: () => {
                     },
-            getImageUrl(imagePath) {
-                return imagePath ? `/storage/${imagePath}` : '/img/image_siswa.jpg';
-                    }
                 });
-            }
+            },
+            getImageUrl(imagePath) {
+                return imagePath ? `/storage/${imagePath}` : '';
+                    }
         }
     }
 </script>

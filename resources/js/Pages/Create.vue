@@ -41,6 +41,7 @@
                     kelas: "",
                     jurusan: "",
                     alamat: "",
+                    image: null
                 }
             }
         },
@@ -49,7 +50,7 @@
                 this.$inertia.post('/siswa', this.form);
             },
             handleFileUpload(event){
-                this.$inertia.image = event.target.file[0];
+                this.form.image = event.target.files[0];
             }
         }
     };

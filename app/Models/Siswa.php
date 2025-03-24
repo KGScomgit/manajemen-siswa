@@ -15,8 +15,8 @@ class Siswa extends Model
             'nis',
             'kelas',
             'jurusan',
-            'alamat'
-
+            'alamat',
+            'image'
         ];
 
     public function user()

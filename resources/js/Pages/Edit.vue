@@ -22,6 +22,10 @@
                 <label class="form-label">Alamat</label>
                 <input type="text" v-model="form.alamat" class="form-control" required>
             </div>
+            <div class="mb-3">
+                <label class="form-label">Gambar</label>
+                <input type="file" @change="handleFileUpload" accept="image/*" class="form-control" required>
+            </div>
             <button type="submit" class="btn btn-primary">Edit</button>
         </form>
     </div>
@@ -39,14 +43,36 @@ export default{
                 nis: this.siswa.nis,
                 kelas: this.siswa.kelas,
                 jurusan: this.siswa.jurusan,
-                alamat: this.siswa.jurusan
+                alamat: this.siswa.alamat,
+                image: null
             }
         };
     },
     methods:{
         editData(){
-            this.$inertia.put(`/siswa/${this.siswa.id}`, this.form)
+            const formData = new FormData();
+            formData.append('_method', 'PUT');
+            formData.append('nama', this.form.nama);
+            formData.append('nis', this.form.nis);
+            formData.append('kelas', this.form.kelas);
+            formData.append('jurusan', this.form.jurusan);
+            formData.append('alamat', this.form.alamat);
+
+            if (this.form.image){
+                formData.append('image', this.form.image);
+            }
+
+            this.$inertia.post(`/siswa/${this.siswa.id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            } )
+        },
+
+        handleFileUpload(event){
+            this.form.image= event.target.files[0];
         }
+
     }
 };
 </script>
